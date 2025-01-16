@@ -1,0 +1,75 @@
+.card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.resource-meter {
+    background: #f1f1f1;
+    height: 20px;
+    border-radius: 10px;
+    margin: 10px 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.resource-meter:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.meter-bar {
+    background: #0073aa;
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+    max-width: 100%;
+}
+
+.meter-bar[data-usage="low"] {
+    background: linear-gradient(90deg, #00a32a 0%, #2271b1 100%);
+}
+
+.meter-bar[data-usage="medium"] {
+    background: linear-gradient(90deg, #dba617 0%, #e65054 100%);
+}
+
+.meter-bar[data-usage="high"] {
+    background: linear-gradient(90deg, #d63638 0%, #800000 100%);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.high-usage {
+    color: #d63638;
+    font-weight: bold;
+}
+
+.medium-usage {
+    color: #dba617;
+}
+
+.low-usage {
+    color: #0073aa;
+}
