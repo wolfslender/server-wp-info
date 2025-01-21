@@ -2,7 +2,7 @@
 /*
 Plugin Name: Server Resource Monitor
 Description: Real-time server resource monitor
-Version: 2.1.0
+Version: 2.1.1
 Author: Alexis Olivero 
 Author URI: https://oliverodev.com/
 */
@@ -54,6 +54,11 @@ function get_php_requests_performance() {
         }
     }
     
+    // Si no hay solicitudes lentas, agregar mensaje informativo
+    if (empty($slow_requests)) {
+        $slow_requests[] = "No slow requests have been detected recently - The system is working properly.";
+    }
+    
     // Obtener información de rendimiento de la página actual
     $current_page_stats = array(
         'page' => $_SERVER['REQUEST_URI'],
@@ -64,7 +69,8 @@ function get_php_requests_performance() {
     
     return array(
         'slow_requests' => array_slice($slow_requests, -5), // Últimas 5 solicitudes lentas
-        'current_page' => $current_page_stats
+        'current_page' => $current_page_stats,
+        'has_slow_requests' => count($slow_requests) > 1 // true si hay solicitudes reales, false si solo está el mensaje predeterminado
     );
 }
 
@@ -388,9 +394,26 @@ function server_monitor_page() {
                 <p>Included Files: <span id="current-included-files">0</span></p>
             </div>
             <h3>Recent Slow Requests</h3>
-            <div id="slow-requests-list"></div>
+            <div id="slow-requests-list" class="slow-requests-container"></div>
         </div>
     </div>
+    <style>
+        .slow-requests-container {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .slow-request-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .slow-request-item.no-requests {
+            color: #0c831c;
+            font-weight: 500;
+        }
+    </style>
     <script>
         jQuery(document).ready(function($) {
             function updateMonitorData() {
@@ -449,7 +472,9 @@ function server_monitor_page() {
                                 var slowRequestsList = $('#slow-requests-list');
                                 slowRequestsList.empty();
                                 data.php_performance.slow_requests.forEach(function(req) {
-                                    slowRequestsList.append('<div class="slow-request-item">' + req + '</div>');
+                                    var cssClass = data.php_performance.has_slow_requests ? 
+                                        'slow-request-item' : 'slow-request-item no-requests';
+                                    slowRequestsList.append('<div class="' + cssClass + '">' + req + '</div>');
                                 });
                             }
                         }
