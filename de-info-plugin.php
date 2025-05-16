@@ -4,7 +4,7 @@ Plugin Name: Server Resource Monitor
 Description: Real-time server resource monitor
 Version: 2.1.1
 Author: Alexis Olivero 
-Author URI: https://oliverodev.com/
+Author URI: https://oliverodev.pages.dev/
 */
 
 // Verificar que WordPress está cargado
